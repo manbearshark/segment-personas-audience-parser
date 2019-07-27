@@ -46,13 +46,22 @@ const transformAll = transform(function(record, callback) {
     parallel: 5
 });
 
+const setTraitCols = function() {
+  let colString = '';
+  traitKeys.forEach((key) => {
+    colString = colString.concat(`,${key}`);
+  });
+  return colString;
+}
+
 // First, parse out all the columns in case there are different traits across user records
 let stream = fs.createReadStream(fileName);
 
 stream.on('close', () => {
   // Make sure the original file stream is closed, then re-parse
-
-  //console.log("Trait Columns: ", traitKeys);
+  // and output columns...
+  const traitCols = setTraitCols();
+  process.stdout.write(`email,anonymous_id${traitCols}` + '\n');
 
   const parser = parse({
     delimiter: ',',
